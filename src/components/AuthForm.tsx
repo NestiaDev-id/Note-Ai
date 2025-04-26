@@ -48,34 +48,43 @@ function AuthForm({ type }: AuthFormProps) {
 
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+  const handleSubmit = (formData: FormData) => {
+    // const email = formData.get("email") as string;
+    // const password = formData.get("password") as string;
 
-    try {
-      const res = await fetch(`/api/auth/${type}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    startTransition(async () => {
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
 
-      if (!res.ok) {
-        throw new Error("Failed to authenticate");
-      }
+      let errorMessage = "";
+      let title = "";
+      let description = "";
+    });
 
-      toast.success("Success", {
-        description: "Authentication successful!",
-      });
+    // try {
+    //   const res = await fetch(`/api/auth/${type}`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ email, password }),
+    //   });
 
-      router.push("/dashboard");
-    } catch (error) {
-      console.error(error);
-      toast.error("Authentication failed", {
-        description: "Please check your credentials and try again.",
-      });
-    }
+    //   if (!res.ok) {
+    //     throw new Error("Failed to authenticate");
+    //   }
+
+    //   toast.success("Success", {
+    //     description: "Authentication successful!",
+    //   });
+
+    //   router.push("/dashboard");
+    // } catch (error) {
+    //   console.error(error);
+    //   toast.error("Authentication failed", {
+    //     description: "Please check your credentials and try again.",
+    //   });
+    // }
   };
 
   return (
