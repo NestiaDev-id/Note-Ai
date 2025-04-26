@@ -4,8 +4,8 @@ import { ThemeProvider } from "@/providers/ThemeProviders";
 import { Toaster } from "sonner";
 import Header from "@/components/Header";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
 import NoteProvider from "@/providers/NoteProvider";
+import AppSidebar from "@/components/AppSidebar";
 
 export const metadata: Metadata = {
   title: "Note Ai",

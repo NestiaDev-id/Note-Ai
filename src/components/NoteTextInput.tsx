@@ -1,10 +1,14 @@
+"use client";
+
 import { useSearchParams } from "next/navigation";
 import React, { ChangeEvent, useEffect } from "react";
 import { Textarea } from "./ui/textarea";
 import { debounceTimeout } from "@/lib/constant";
+import useNote from "@/hooks/useNote";
+import { updateNoteAction } from "@/action/note";
 
 type Props = {
-  noteId: string | null;
+  noteId: string;
   startingNoteText: string;
 };
 
@@ -16,7 +20,7 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
 
   useEffect(() => {
     if (noteIdParam === noteId) {
-      setNoteText(noteIdParam);
+      setNoteText(startingNoteText);
     }
   }, [startingNoteText, noteIdParam, noteId, setNoteText]);
 
@@ -27,13 +31,15 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
     updateTimeout = setTimeout(() => {
       updateNoteAction(noteId, text);
     }, debounceTimeout);
+    setNoteText(text); // Also update local state immediately
   };
+
   return (
     <Textarea
       value={noteText}
-      onChange={(e) => handleUpdateNote(e.target.value)}
+      onChange={handleUpdateNote}
       placeholder="Type your note here..."
-      className="custom-scrollbar resize-nonre placeholder:text-muted-foreground mb-4 h-full max-w-4xl border p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+      className="custom-scrollbar placeholder:text-muted-foreground mb-4 h-full max-w-4xl resize-none border p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
     />
   );
 }

@@ -6,24 +6,19 @@ import { prisma } from "@/db/prisma";
 import Image from "next/image";
 
 type Props = {
-  noteId: string | null;
-  searchParams: {
-    [key: string]: string | string[] | undefined;
-  };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 async function Home({ searchParams }: Props) {
+  const noteIdParam = (await searchParams).noteId;
   const user = await getUser();
-  const noteIdParam = searchParams?.noteId;
+
   const noteId = Array.isArray(noteIdParam)
-    ? noteIdParam[0]
+    ? noteIdParam![0]
     : noteIdParam || "";
 
-  const note = await prisma.note.findFirst({
-    where: {
-      id: noteId,
-      authorId: user?.id || undefined,
-    },
+  const note = await prisma.note.findUnique({
+    where: { id: noteId, authorId: user?.id },
   });
 
   return (
