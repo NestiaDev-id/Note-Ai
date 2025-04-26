@@ -9,7 +9,8 @@ function SignUpPage() {
         <CardHeader className="mb-4">
           <CardTitle className="text-center text-3xl">Sign Up</CardTitle>
         </CardHeader>
-        <AuthForm type="register"></AuthForm>
+
+        <AuthForm type="register" />
       </Card>
     </div>
   );
