@@ -19,100 +19,34 @@ function AuthForm({ type }: AuthFormProps) {
 
   const router = useRouter();
 
-  //   const handleSubmit = async (e: React.FormEvent) => {
-  //     e.preventDefault();
-  //     try {
-  //       const res = await fetch(`/api/auth/${type}`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         // body: JSON.stringify(data), // tambahkan data jika perlu
-  //       });
-
-  //       if (!res.ok) {
-  //         throw new Error("Failed to authenticate");
-  //       }
-
-  //       toast.success("Success", {
-  //         description: "Authentication successful!",
-  //         duration: 5000,
-  //       });
-  //       router.push("/dashboard"); // atau halaman yang sesuai
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("Authentication failed", {
-  //         description: "Please try again.",
-  //         duration: 5000,
-  //       });
-  //   };
-
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
-    // const email = formData.get("email") as string;
-    // const password = formData.get("password") as string;
-
     startTransition(async () => {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
 
-      let errorMessage = null;
-      let title = "";
-      let description = "";
-
+      let errorMessage;
       if (isLoginForm) {
         errorMessage = (await loginUserAction(email, password)).errorMessage;
-
-        title = "Login failed";
-        description = "Please check your credentials and try again.";
       } else {
         errorMessage = (await signUpUserAction(email, password)).errorMessage;
-
-        title = "Sign up";
-        description = "Check your email for verification.";
       }
 
-      if (errorMessage) {
-        toast.error(title, {
-          description: errorMessage,
-          duration: 5000,
-        });
+      if (!errorMessage) {
+        router.replace(`/?toastType=${type}`);
       } else {
-        toast.success(title, {
-          description: description,
-          duration: 5000,
+        toast.error(errorMessage, {
+          description: "Please try again.",
+          action: {
+            label: "Retry",
+            onClick: () => {
+              router.refresh();
+            },
+          },
         });
-        router.replace("/");
       }
     });
-
-    }
-
-    // try {
-    //   const res = await fetch(`/api/auth/${type}`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ email, password }),
-    //   });
-
-    //   if (!res.ok) {
-    //     throw new Error("Failed to authenticate");
-    //   }
-
-    //   toast.success("Success", {
-    //     description: "Authentication successful!",
-    //   });
-
-    //   router.push("/dashboard");
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error("Authentication failed", {
-    //     description: "Please check your credentials and try again.",
-    //   });
-    // }
   };
 
   return (
