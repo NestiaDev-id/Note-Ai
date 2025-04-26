@@ -1,5 +1,7 @@
 import { getUser } from "@/auth/server";
 import AskAiButton from "@/components/AskAiButton";
+import NewNoteButton from "@/components/NewNoteButton";
+import NoteTextInput from "@/components/NoteTextInput";
 import { prisma } from "@/db/prisma";
 import Image from "next/image";
 
