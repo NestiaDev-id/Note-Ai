@@ -120,3 +120,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.custom-toast-class {
+  background-color: #f0f4f8;
+  border: 1px solid #d1e7dd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.custom-title-class {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0f5132;
+}
+
+.custom-description-class {
+  font-size: 14px;
+  color: #155724;
+}
+
+.custom-success-class {
+  color: #198754;
+}

@@ -3,12 +3,11 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
-import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 function LogoutButton() {
   const [loading, setLoading] = useState(false);
-  const { toast } = Toaster();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -26,17 +25,25 @@ function LogoutButton() {
       const errorMessage = null;
 
       if (!errorMessage) {
-        toast({
-          title: "Logout",
-          message: "You have been logged out successfully.",
-          variant: "success",
+        toast.success("Logout", {
+          description: "Logout successful!", // Menambahkan deskripsi
+          classNames: {
+            toast: "custom-toast-class", // Class untuk toast
+            title: "custom-title-class", // Class untuk judul
+            description: "custom-description-class", // Class untuk deskripsi
+          },
+          duration: 5000, // Durasi toast dalam milidetik
         });
         router.push("/");
       } else {
-        toast({
-          title: "Logout",
-          message: errorMessage,
-          variant: "error",
+        toast.error("Logout failed", {
+          description: errorMessage, // Menambahkan deskripsi
+          classNames: {
+            toast: "custom-toast-class", // Class untuk toast
+            title: "custom-title-class", // Class untuk judul
+            description: "custom-description-class", // Class untuk deskripsi
+          },
+          duration: 5000, // Durasi toast dalam milidetik
         });
       }
     } catch (error) {

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { shadow } from "@/styles/utils";
 import { Button } from "./ui/button";
 import { DarkModeToggle } from "./DarkModeToggle";
-import LogoutButton from "./LogOutButton";
+import LogoutButton from "./LogoutButton";
 
 function Header() {
   const user = null;
