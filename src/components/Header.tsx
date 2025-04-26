@@ -6,25 +6,33 @@ import { Button } from "./ui/button";
 import { DarkModeToggle } from "./DarkModeToggle";
 import LogoutButton from "./LogoutButton";
 
-function Header() {
+async function Header() {
   const user = null;
+
   return (
-    <div
-      className="justify-beetween bg-popover relative flex h-24 w-full items-center px-3 sm:px-8"
-      style={{ boxShadow: shadow }}
+    <header
+      className="bg-popover relative flex h-24 w-full items-center justify-between px-3 sm:px-8"
+      style={{
+        boxShadow: shadow,
+      }}
     >
-      <Link href="/">
+      {/* <SidebarTrigger className="absolute top-1 left-1" /> */}
+
+      <Link className="flex items-end gap-2" href="/">
         <Image
-          src="/logo.png"
-          alt="logo"
-          width={60}
+          src="/globe.svg"
           height={60}
+          width={60}
+          alt="logo"
           className="rounded-full"
+          priority
         />
+
         <h1 className="flex flex-col pb-1 text-2xl leading-6 font-semibold">
-          Note <span>Ai</span>{" "}
+          Note <span>Ai</span>
         </h1>
       </Link>
+
       <div className="flex gap-4">
         {user ? (
           <LogoutButton />
@@ -35,14 +43,14 @@ function Header() {
                 Sign Up
               </Link>
             </Button>
-            <Button asChild variant={"outline"}>
+            <Button asChild variant="outline">
               <Link href="/login">Login</Link>
             </Button>
           </>
         )}
         <DarkModeToggle />
       </div>
-    </div>
+    </header>
   );
 }
 

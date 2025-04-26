@@ -79,52 +79,50 @@ function AuthForm({ type }: AuthFormProps) {
   };
 
   return (
-    <form action={handleSubmit} className="mx-auto mt-10 max-w-sm">
+    <form action={handleSubmit}>
       <CardContent className="grid w-full items-center gap-4">
         <div className="flex flex-col space-y-1.5">
-          <Label />
+          <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             name="email"
-            type="email"
             placeholder="Enter your email"
+            type="email"
             required
             disabled={isPending}
-            className="w-full"
           />
         </div>
         <div className="flex flex-col space-y-1.5">
-          <Label />
+          <Label htmlFor="password">Password</Label>
           <Input
             id="password"
             name="password"
-            type="password"
             placeholder="Enter your password"
+            type="password"
             required
             disabled={isPending}
-            className="w-full"
           />
         </div>
       </CardContent>
       <CardFooter className="mt-4 flex flex-col gap-6">
-        <Button className="w-full" type="submit" disabled={isPending}>
+        <Button className="w-full">
           {isPending ? (
             <Loader2 className="animate-spin" />
           ) : isLoginForm ? (
             "Login"
           ) : (
-            "Register"
+            "Sign Up"
           )}
         </Button>
         <p className="text-xs">
           {isLoginForm
-            ? "Don't have an account? Register"
-            : "Already have an account? Login"}
+            ? "Don't have an account yet?"
+            : "Already have an account?"}{" "}
           <Link
             href={isLoginForm ? "/sign-up" : "/login"}
-            className={`text-blue-500 hover:underline ${isPending ? "pointer-events-none opacity-50" : ""}`}
+            className={`text-blue-500 underline ${isPending ? "pointer-events-none opacity-50" : ""}`}
           >
-            {isLoginForm ? "Register" : "Login"}
+            {isLoginForm ? "Sign Up" : "Login"}
           </Link>
         </p>
       </CardFooter>
