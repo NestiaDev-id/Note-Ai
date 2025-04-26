@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { logoutUserAction } from "@/action/users";
 
 function LogoutButton() {
   const [loading, setLoading] = useState(false);
@@ -13,16 +14,7 @@ function LogoutButton() {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
-
-      const errorMessage = null;
+      const { errorMessage } = await logoutUserAction();
 
       if (!errorMessage) {
         toast.success("Logout", {

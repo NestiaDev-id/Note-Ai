@@ -8,6 +8,7 @@ import { Input } from "./ui/input";
 import { Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { loginUserAction, signUpUserAction } from "@/action/users";
 
 type AuthFormProps = {
   type: "login" | "register";
@@ -56,10 +57,37 @@ function AuthForm({ type }: AuthFormProps) {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
 
-      let errorMessage = "";
+      let errorMessage = null;
       let title = "";
       let description = "";
+
+      if (isLoginForm) {
+        errorMessage = (await loginUserAction(email, password)).errorMessage;
+
+        title = "Login failed";
+        description = "Please check your credentials and try again.";
+      } else {
+        errorMessage = (await signUpUserAction(email, password)).errorMessage;
+
+        title = "Sign up";
+        description = "Check your email for verification.";
+      }
+
+      if (errorMessage) {
+        toast.error(title, {
+          description: errorMessage,
+          duration: 5000,
+        });
+      } else {
+        toast.success(title, {
+          description: description,
+          duration: 5000,
+        });
+        router.replace("/");
+      }
     });
+
+    }
 
     // try {
     //   const res = await fetch(`/api/auth/${type}`, {
