@@ -26,15 +26,19 @@ export async function createClient() {
   );
   return client;
 }
-
 export async function getUser() {
-  const { auth } = await createClient();
-  const userObject = await auth.getUser();
+  try {
+    const { auth } = await createClient();
+    const userObject = await auth.getUser();
 
-  if (userObject.error) {
-    console.error("Error getting user:", userObject.error.message);
+    if (userObject.error) {
+      console.error("Error getting user:", userObject.error.message);
+      return null;
+    }
+
+    return userObject.data.user;
+  } catch (error) {
+    console.error("Unexpected error in getUser:", error);
     return null;
   }
-
-  return userObject.data.user;
 }

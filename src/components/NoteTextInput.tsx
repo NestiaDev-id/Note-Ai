@@ -12,10 +12,10 @@ type Props = {
   startingNoteText: string;
 };
 
-let updateTimeout: NodeJS.Timeout | null = null;
+let updateTimeout: NodeJS.Timeout;
 
 function NoteTextInput({ noteId, startingNoteText }: Props) {
-  const noteIdParam = useSearchParams().get("noteId");
+  const noteIdParam = useSearchParams().get("noteId") || "";
   const { noteText, setNoteText } = useNote();
 
   useEffect(() => {
@@ -24,21 +24,22 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
     }
   }, [startingNoteText, noteIdParam, noteId, setNoteText]);
 
-  const handleUpdateNote = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleUpdateNote = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
 
-    clearTimeout(updateTimeout!);
+    setNoteText(text);
+
+    clearTimeout(updateTimeout);
     updateTimeout = setTimeout(() => {
       updateNoteAction(noteId, text);
-    }, debounceTimeout);
-    setNoteText(text); // Also update local state immediately
+    }, 1500);
   };
 
   return (
     <Textarea
       value={noteText}
       onChange={handleUpdateNote}
-      placeholder="Type your note here..."
+      placeholder="Type your notes here.."
       className="custom-scrollbar placeholder:text-muted-foreground mb-4 h-full max-w-4xl resize-none border p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
     />
   );

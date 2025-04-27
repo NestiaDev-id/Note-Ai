@@ -21,30 +21,27 @@ function AuthForm({ type }: AuthFormProps) {
 
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = async (formData: FormData) => {
     startTransition(async () => {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
 
-      let errorMessage;
-      if (isLoginForm) {
-        errorMessage = (await loginUserAction(email, password)).errorMessage;
-      } else {
-        errorMessage = (await signUpUserAction(email, password)).errorMessage;
-      }
+      let errorMessage = null;
+      try {
+        if (isLoginForm) {
+          errorMessage = (await loginUserAction(email, password)).errorMessage;
+        } else {
+          errorMessage = (await signUpUserAction(email, password)).errorMessage;
+        }
 
-      if (!errorMessage) {
-        router.replace(`/?toastType=${type}`);
-      } else {
-        toast.error(errorMessage, {
-          description: "Please try again.",
-          action: {
-            label: "Retry",
-            onClick: () => {
-              router.refresh();
-            },
-          },
-        });
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
+
+        router.replace(`/`);
+      } catch (error: any) {
+        toast.error(error.message || "An error occurred. Please try again.");
+        console.error("AuthForm error:", error);
       }
     });
   };

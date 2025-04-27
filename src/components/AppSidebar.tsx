@@ -2,10 +2,8 @@ import { getUser } from "@/auth/server";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarHeader,
 } from "@/components/ui/sidebar";
 import { prisma } from "@/db/prisma";
 import Link from "next/link";
@@ -18,6 +16,7 @@ async function AppSidebar() {
   let notes: Note[] = [];
 
   if (user) {
+    console.log("user", user);
     notes = await prisma.note.findMany({
       where: {
         authorId: user.id,

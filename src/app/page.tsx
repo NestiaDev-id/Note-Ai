@@ -3,7 +3,6 @@ import AskAiButton from "@/components/AskAiButton";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
 import { prisma } from "@/db/prisma";
-import Image from "next/image";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -17,9 +16,13 @@ async function Home({ searchParams }: Props) {
     ? noteIdParam![0]
     : noteIdParam || "";
 
-  const note = await prisma.note.findUnique({
-    where: { id: noteId, authorId: user?.id },
-  });
+  // const note = null;
+  // Ambil data note dari Prisma
+  const note = noteId
+    ? await prisma.note.findUnique({
+        where: { id: noteId },
+      })
+    : null;
 
   return (
     <div className="flex h-full flex-col items-center gap-4">

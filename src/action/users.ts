@@ -13,11 +13,12 @@ export const loginUserAction = async (email: string, password: string) => {
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      console.log("Login failed", error);
+      throw new Error("Login failed. Please check your credentials.");
+    }
 
-    return {
-      errorMessage: null,
-    };
+    return { errorMessage: null };
   } catch (error) {
     return handleError(error);
   }
@@ -32,13 +33,12 @@ export const signUpUserAction = async (email: string, password: string) => {
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      throw new Error(`Signup failed: ${error.message}`);
+    }
 
     const userId = data.user?.id;
-
-    if (!userId) {
-      throw new Error("User ID not found");
-    }
+    if (!userId) throw new Error("Error signing up");
 
     await prisma.user.create({
       data: {
@@ -47,14 +47,11 @@ export const signUpUserAction = async (email: string, password: string) => {
       },
     });
 
-    return {
-      errorMessage: null,
-    };
+    return { errorMessage: null };
   } catch (error) {
     return handleError(error);
   }
 };
-
 export const logoutUserAction = async () => {
   try {
     const { auth } = await createClient();

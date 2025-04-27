@@ -48,7 +48,7 @@ export async function updateSession(request: NextRequest) {
   //   } = await supabase.auth.getUser();
 
   // Very important: This triggers session refresh if needed!
-  // await supabase.auth.getUser();
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }
