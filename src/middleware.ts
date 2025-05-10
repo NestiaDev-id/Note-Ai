@@ -43,12 +43,52 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  //   const {
-  //     data: { user },
-  //   } = await supabase.auth.getUser();
+  const isAuthRoute =
+    request.nextUrl.pathname === "/login" ||
+    request.nextUrl.pathname === "/register";
 
-  // Very important: This triggers session refresh if needed!
-  await supabase.auth.getUser();
+  if (isAuthRoute) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  return supabaseResponse;
+    if (user) {
+      return NextResponse.redirect(
+        new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
+      );
+    }
+  }
+
+  const { searchParams, pathname } = new URL(request.url);
+
+  if (!searchParams.get("noteId") && pathname === "/") {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { newestNoteId } = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?userId=${user.id}`,
+      ).then((res) => res.json());
+
+      if (newestNoteId) {
+        const url = request.nextUrl.clone();
+        url.searchParams.set("noteId", newestNoteId);
+        return NextResponse.redirect(url);
+      } else {
+        const { noteId } = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/create-new-note?userId=${user.id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        ).then((res) => res.json());
+        const url = request.nextUrl.clone();
+        url.searchParams.set("noteId", noteId);
+        return NextResponse.redirect(url);
+      }
+    }
+  }
 }
