@@ -6,6 +6,7 @@ type Props = {
   user: User | null;
 };
 function AskAiButton({ user }: Props) {
+  console.log("user: ", user?.email);
   return <div>AskAiButton</div>;
 }
 

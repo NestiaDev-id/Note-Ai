@@ -32,7 +32,7 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(() => {
       updateNoteAction(noteId, text);
-    }, 1500);
+    }, debounceTimeout);
   };
 
   return (

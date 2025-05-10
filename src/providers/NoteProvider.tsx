@@ -14,7 +14,7 @@ export const NoteProviderContext = createContext<NoteProviderContextType>({
 });
 
 function NoteProvider({ children }: { children: React.ReactNode }) {
-  const [noteText, setNoteText] = useState<string>("");
+  const [noteText, setNoteText] = useState("");
 
   return (
     <NoteProviderContext.Provider value={{ noteText, setNoteText }}>
