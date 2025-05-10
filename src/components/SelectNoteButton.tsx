@@ -1,8 +1,9 @@
 "use client";
+
 import useNote from "@/hooks/useNote";
 import { Note } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SidebarMenuButton } from "./ui/sidebar";
 import Link from "next/link";
 
@@ -14,16 +15,14 @@ function SelectNoteButton({ note }: Props) {
   const noteId = useSearchParams().get("noteId") || "";
 
   const { noteText: selectedNoteText } = useNote();
-  const { shouldUseGlobalNoteText, setshouldUseGlobalNoteText } =
-    useState(false);
-  const { localNoteText, setLocalNoteText } = useState(note.text);
-  const blankNoteText = "EMPTY NOTE";
+  const [shouldUseGlobalNoteText, setShouldUseGlobalNoteText] = useState(false);
+  const [localNoteText, setLocalNoteText] = useState(note.text);
 
   useEffect(() => {
     if (noteId === note.id) {
-      setshouldUseGlobalNoteText(true);
+      setShouldUseGlobalNoteText(true);
     } else {
-      setshouldUseGlobalNoteText(false);
+      setShouldUseGlobalNoteText(false);
     }
   }, [noteId, note.id]);
 
@@ -33,6 +32,7 @@ function SelectNoteButton({ note }: Props) {
     }
   }, [selectedNoteText, shouldUseGlobalNoteText]);
 
+  const blankNoteText = "EMPTY NOTE";
   let noteText = localNoteText || blankNoteText;
   if (shouldUseGlobalNoteText) {
     noteText = selectedNoteText || blankNoteText;

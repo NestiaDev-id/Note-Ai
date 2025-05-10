@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
-// import { createNoteAction } from "@/action/note";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 import { createNoteAction } from "@/action/note";
@@ -27,7 +26,7 @@ function NewNoteButton({ user }: Props) {
 
       const uuid = uuidv4();
       await createNoteAction(uuid);
-      router.push(`/?noteId=${uuid}`);
+      router.push(`/?noteId=${uuid}&toastType=newNote`);
 
       toast.success("New Note created", {
         description: "Note created successfully!", // Menambahkan deskripsi
@@ -37,7 +36,7 @@ function NewNoteButton({ user }: Props) {
       setLoading(false);
     }
   };
-  console.log("user: ", user?.email);
+
   return (
     <Button
       onClick={handleClickNewNoteButton}
