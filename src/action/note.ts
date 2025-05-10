@@ -3,7 +3,22 @@
 import { getUser } from "@/auth/server";
 import { prisma } from "@/db/prisma";
 import { handleError } from "@/lib/utils";
+import DeleteNotedButton from "../components/DeleteNoteButton";
 
+export const deleteNoteAction = async (noteId: string) => {
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("You must be logged in to delete a note");
+
+    await prisma.note.delete({
+      where: { id: noteId, authorId: user.id },
+    });
+
+    return { errorMessage: null };
+  } catch (error) {
+    return handleError(error);
+  }
+};
 export const createNoteAction = async (noteId: string) => {
   try {
     const user = await getUser();
