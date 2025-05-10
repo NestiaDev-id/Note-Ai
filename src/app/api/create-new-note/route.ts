@@ -1,6 +1,5 @@
 import { prisma } from "@/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { text } from "stream/consumers";
 
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url);
