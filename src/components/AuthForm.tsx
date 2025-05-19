@@ -26,7 +26,7 @@ function AuthForm({ type }: AuthFormProps) {
 
       try {
         if (isLoginForm) {
-          const { errorMessage, userId: _userId, noteId } = await loginUserAction(email, password);
+          const { errorMessage, noteId } = await loginUserAction(email, password);
           if (errorMessage) throw new Error(errorMessage);
           
           // Force a router refresh to update auth state
