@@ -1,44 +1,55 @@
+"use server";
+
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function createClient() {
-  const cookieStore = await cookies();
+export async function getUser() {
+  try {
+    const supabase = createServerClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          async get(name) {
+            const cookieStore = await cookies();
+            return cookieStore.get(name)?.value;
+          },
+          async set(name, value, options) {
+            // Cookie setting is handled by middleware
+          },
+          async remove(name) {
+            // Cookie removal is handled by middleware
+          },
+        },
+      }
+    );
 
-  const client = createServerClient(
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  } catch (error) {
+    console.error("Error in getUser:", error);
+    return null;
+  }
+}
+
+// Helper function to create a Supabase client (used by other server actions)
+export async function createClient() {
+  return createServerClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
+        async get(name) {
+          const cookieStore = await cookies();
+          return cookieStore.get(name)?.value;
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            );
-          } catch (error) {
-            console.error("Error setting cookies:", error);
-          }
+        async set(name, value, options) {
+          // Cookie setting is handled by middleware
+        },
+        async remove(name) {
+          // Cookie removal is handled by middleware
         },
       },
-    },
-  );
-  return client;
-}
-export async function getUser() {
-  try {
-    const { auth } = await createClient();
-    const userObject = await auth.getUser();
-
-    if (userObject.error) {
-      console.error("Error getting user:", userObject.error.message);
-      return null;
     }
-
-    return userObject.data.user;
-  } catch (error) {
-    console.error("Unexpected error in getUser:", error);
-    return null;
-  }
+  );
 }

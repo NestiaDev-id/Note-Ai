@@ -16,9 +16,7 @@ type AuthFormProps = {
 
 function AuthForm({ type }: AuthFormProps) {
   const isLoginForm = type === "login";
-
   const router = useRouter();
-
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
@@ -26,19 +24,32 @@ function AuthForm({ type }: AuthFormProps) {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
 
-      let errorMessage = null;
       try {
         if (isLoginForm) {
-          errorMessage = (await loginUserAction(email, password)).errorMessage;
+          const { errorMessage, userId, noteId } = await loginUserAction(email, password);
+          if (errorMessage) throw new Error(errorMessage);
+          
+          // Force a router refresh to update auth state
+          router.refresh();
+          
+          // Redirect to the latest note or home
+          if (noteId) {
+            router.push(`/?noteId=${noteId}`);
+          } else {
+            router.push('/');
+          }
+          
+          toast.success("Login successful!");
         } else {
-          errorMessage = (await signUpUserAction(email, password)).errorMessage;
+          const { errorMessage } = await signUpUserAction(email, password);
+          if (errorMessage) throw new Error(errorMessage);
+          
+          // Force a router refresh to update auth state
+          router.refresh();
+          router.push('/');
+          
+          toast.success("Sign up successful!");
         }
-
-        if (errorMessage) {
-          throw new Error(errorMessage);
-        }
-
-        router.replace(`/`);
       } catch (error: any) {
         toast.error(error.message || "An error occurred. Please try again.");
         console.error("AuthForm error:", error);
@@ -73,7 +84,7 @@ function AuthForm({ type }: AuthFormProps) {
         </div>
       </CardContent>
       <CardFooter className="mt-4 flex flex-col gap-6">
-        <Button className="w-full">
+        <Button className="w-full" disabled={isPending}>
           {isPending ? (
             <Loader2 className="animate-spin" />
           ) : isLoginForm ? (

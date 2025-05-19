@@ -5,18 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const handleError = (error: unknown) => {
-  if (error instanceof Error) {
-    return {
-      errorMessage: error.message,
-    };
-  } else if (typeof error === "string") {
-    return {
-      errorMessage: error,
-    };
-  } else {
-    return {
-      errorMessage: "An unknown error occurred",
-    };
-  }
-};
+export function handleError(error: unknown) {
+  console.error("Error:", error);
+  return {
+    errorMessage: error instanceof Error ? error.message : "An unexpected error occurred",
+    userId: undefined,
+    noteId: undefined
+  } as const;
+}
