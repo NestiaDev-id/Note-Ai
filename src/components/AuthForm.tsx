@@ -26,7 +26,7 @@ function AuthForm({ type }: AuthFormProps) {
 
       try {
         if (isLoginForm) {
-          const { errorMessage, userId, noteId } = await loginUserAction(email, password);
+          const { errorMessage, userId: _userId, noteId } = await loginUserAction(email, password);
           if (errorMessage) throw new Error(errorMessage);
           
           // Force a router refresh to update auth state
@@ -50,10 +50,11 @@ function AuthForm({ type }: AuthFormProps) {
           
           toast.success("Sign up successful!");
         }
-      } catch (error: any) {
-        toast.error(error.message || "An error occurred. Please try again.");
+      } catch (error: unknown) {
+        const errMsg = error instanceof Error ? error.message : "An error occurred. Please try again.";
+        toast.error(errMsg);
         console.error("AuthForm error:", error);
-      }
+      }      
     });
   };
 

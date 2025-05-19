@@ -14,10 +14,10 @@ export async function getUser() {
             const cookieStore = await cookies();
             return cookieStore.get(name)?.value;
           },
-          async set(name, value, options) {
+          async set(_name: string, _value: string, _options: any) {
             // Cookie setting is handled by middleware
           },
-          async remove(name) {
+          async remove(_name: string) {
             // Cookie removal is handled by middleware
           },
         },
@@ -43,12 +43,13 @@ export async function createClient() {
           const cookieStore = await cookies();
           return cookieStore.get(name)?.value;
         },
-        async set(name, value, options) {
+        async set(_name: string, _value: string, _options: any) {
           // Cookie setting is handled by middleware
         },
-        async remove(name) {
+        async remove(_name: string) {
           // Cookie removal is handled by middleware
         },
+        
       },
     }
   );
