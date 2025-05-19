@@ -3,7 +3,7 @@
 import { createClient } from "@/auth/server";
 import { prisma } from "@/db/prisma";
 import { handleError } from "@/lib/utils";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { v4 as uuidv4 } from "uuid";
 
 export const loginUserAction = async (email: string, password: string): Promise<
@@ -92,7 +92,8 @@ export const signUpUserAction = async (email: string, password: string) => {
       });
 
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e instanceof PrismaClientKnownRequestError)
+        {
         if (e.code === 'P2002') {
           throw new Error("This email is already registered. Please login instead.");
         }
